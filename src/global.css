@@ -10,3 +10,17 @@ body {
   height:100%;
   width:100%;
 }
+
+.ml20{
+  margin-left:20px;
+}
+.mt50{
+  margin-top:50px;
+}
+.overflow-auto{
+  overflow: auto;
+  height:100%;
+}
+.pb50{
+  padding-bottom:50px;
+}

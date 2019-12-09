@@ -1,33 +1,47 @@
-import styles from './index.css';
-
-// function BasicLayout(props) {
-//   return (
-//     <div className={styles.normal}>
-//       <h1 className={styles.title}>Yay! Welcome to umi!</h1>
-//       {props.children}
-//     </div>
-//   );
-// }
-
-// export default BasicLayout;
+import styles from './index.scss';
 
 import { Component } from 'react';
 import withRouter from 'umi/withRouter';
 
+
+import Link from 'umi/link';
+import { Menu } from 'antd';
 class Layout extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
     }
   }
+  state = {
+    current: 'mail',
+  }
+  handleClick = (e) => {
+    console.log('click ', e);
+    this.setState({
+      current: e.key,
+    });
+  }
   render() {
     const { children, location } = this.props;
-    console.log(location.pathname,this.props)
     if(location.pathname!=='/login'){
       return (
         <div className={styles.normal}>
-          <h1 className={styles.title}>Yay! Welcome to umi!</h1>
-          <div>{children}</div>
+          <div className={styles.topMenu} >
+            <Menu 
+              onClick={this.handleClick}
+              selectedKeys={[this.state.current]}
+              mode="horizontal"
+              className="sider-menu-container">
+              <Menu.Item key="mail">
+                <Link to="/list"> Navigation One</Link>
+              </Menu.Item>
+              <Menu.Item key="app">
+                <Link to="/404"> Navigation Two</Link>
+              </Menu.Item>
+            </Menu>
+            <Link to="/login"> 退出</Link>
+          </div>
+          <div className={styles.allContent}>{children}</div>
         </div>
       )
     }

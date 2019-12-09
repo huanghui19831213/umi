@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "start": "umi dev",
-    "build": "umi build",
+    "start": "cross-env UMI_ENV=dev umi dev",
+    "build": "cross-env UMI_ENV=prod umi build",
     "test": "umi test",
     "lint": "eslint --ext .js src mock tests",
     "precommit": "lint-staged"
@@ -14,10 +14,12 @@
     "dva-logger": "^1.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-transition-group": "^4.3.0"
+    "react-transition-group": "^4.3.0",
+    "umi-request": "^1.2.12"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
+    "cross-env": "^6.0.3",
     "eslint": "^5.4.0",
     "eslint-config-umi": "^1.4.0",
     "eslint-plugin-flowtype": "^2.50.0",

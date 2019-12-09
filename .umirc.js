@@ -1,5 +1,5 @@
 
-// ref: https://umijs.org/config/
+console.log(process.env.UMI_ENV,1)
 export default {
   treeShaking: true,
   routes: [
@@ -7,7 +7,7 @@ export default {
       path: '/',
       component: '../layouts/index',
       routes: [
-        { path: '/', component: '../pages/index' },
+        { path: '/', component: '../pages/users/list' },
         { path: '/404', component: '../pages/404' },
         { path: '/list', component: '../pages/users/list' },
         { path: '/index', component: '../pages/users/index' },
@@ -37,4 +37,11 @@ export default {
       },
     }],
   ],
+  proxy: {
+    "/api": {
+      "target": 'http://1.1.1.1:8001',
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
+    }
+  }
 }

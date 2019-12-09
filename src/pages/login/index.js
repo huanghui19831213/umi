@@ -4,12 +4,17 @@ import OImg from '@/assets/image/tree.png';
 
 import { Component } from 'react';
 
+import request from '@/utils/request';
 class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        request('/api/web/rest/UserRest/login', {
+          method: 'POST',
+          data: values
+        })
       }
     });
   };
