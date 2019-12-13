@@ -61,11 +61,11 @@ request.interceptors.request.use(async (url, options) => {
       }
     );
   } else {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'x-auth-token': c_token
-    };
+    // const headers = {
+    //   'Content-Type': 'application/json',
+    //   'Accept': 'application/json',
+    //   'x-auth-token': c_token
+    // };
     return (
       {
         url: url,

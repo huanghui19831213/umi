@@ -3,18 +3,38 @@ import { Form, Icon, Input, Button, Row, Col  } from 'antd';
 import OImg from '@/assets/image/tree.png';
 
 import { Component } from 'react';
+import { connect } from 'dva';
+// import request from '@/utils/request';
 
-import request from '@/utils/request';
+
+@connect(({loading}) => ({
+  submitting: loading.effects['login/login'],
+}))
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username:'',
+      password:''
+    };
+  };
+
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err, arr) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        request('/api/web/rest/UserRest/login', {
-          method: 'POST',
-          data: values
-        })
+        // request('/api/web/rest/UserRest/login', {
+        //   method: 'POST',
+        //   data: values
+        // })
+        // this.setState({
+        //   username:values.username,
+        //   password:values.password
+        // })
+        this.props.dispatch({
+          type: 'login/login',
+          data: arr
+       })
       }
     });
   };
@@ -26,6 +46,7 @@ class Login extends Component {
     return(
       <div className={styles.contentBg}>
         <img src={OImg} alt=""/>
+        <span className={styles.title}>token:{this.props.token}</span>
         <div>
           <h6>用户登录</h6>
           <Form  labelCol={{ span: 7 }} wrapperCol={{ span: 12 }}  onSubmit={this.handleSubmit} className="login-form">
@@ -71,4 +92,13 @@ class Login extends Component {
   }
 }
 const LoginForm = Form.create({ name: 'loginForm' })(Login);
-export default LoginForm;
+
+
+const mapStateToProps =(state) => {
+  return {
+    token:state.login.token
+  }
+}
+export default connect(mapStateToProps)(LoginForm)
+
+
