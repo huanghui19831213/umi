@@ -7,7 +7,8 @@ import { connect } from 'dva';
 // import request from '@/utils/request';
 
 
-@connect(({loading}) => ({
+@connect(({login,loading}) => ({
+  login:login,
   submitting: loading.effects['login/login'],
 }))
 class Login extends Component {

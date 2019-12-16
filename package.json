@@ -12,10 +12,12 @@
     "antd": "^3.26.0",
     "dva": "^2.6.0-beta.6",
     "dva-logger": "^1.0.0",
+    "dva-model-persist": "^1.0.0",
     "history": "^4.10.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-transition-group": "^4.3.0",
+    "redux-persist": "^6.0.0",
     "umi-request": "^1.2.12"
   },
   "devDependencies": {
