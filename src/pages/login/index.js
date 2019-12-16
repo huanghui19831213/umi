@@ -4,7 +4,7 @@ import OImg from '@/assets/image/tree.png';
 
 import { Component } from 'react';
 import { connect } from 'dva';
-// import request from '@/utils/request';
+import request from '@/utils/request';
 
 
 @connect(({login,loading}) => ({
@@ -16,26 +16,45 @@ class Login extends Component {
     super(props);
     this.state = {
       username:'',
-      password:''
+      password:'',
+      img:'',
+      uuid:''
     };
   };
-
+  componentDidMount() {
+    this.getCaptchaImage()
+  };
+  getCaptchaImage (){
+    request('/api/captchaImage', {method: 'GET'}).then(e=>{
+      if(e.code===200){
+        this.setState({
+          img:"data:image/gif;base64,"+ e.img,
+          uuid:e.uuid
+        })
+      }
+    })
+  };
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, arr) => {
       if (!err) {
-        // request('/api/web/rest/UserRest/login', {
-        //   method: 'POST',
-        //   data: values
-        // })
+        console.log(arr)
+        request('/api/login', {
+          method: 'POST',
+          data: {...arr,uuid:this.state.uuid}
+        }).then((e)=>{
+          if(e.code===200){
+
+          }
+        })
         // this.setState({
         //   username:values.username,
         //   password:values.password
         // })
-        this.props.dispatch({
-          type: 'login/login',
-          data: arr
-       })
+      //   this.props.dispatch({
+      //     type: 'login/login',
+      //     data: arr
+      //  })
       }
     });
   };
@@ -46,34 +65,41 @@ class Login extends Component {
     const {getFieldDecorator} = this.props.form;
     return(
       <div className={styles.contentBg}>
-        <img src={OImg} alt=""/>
-        <span className={styles.title}>token:{this.props.token}</span>
+        <img src={OImg} alt="" className={styles.bg} />
         <div>
           <h6>用户登录</h6>
           <Form  labelCol={{ span: 7 }} wrapperCol={{ span: 12 }}  onSubmit={this.handleSubmit} className="login-form">
-            <Form.Item label="Username" >
+            <Form.Item label="用户名" >
                 {getFieldDecorator('username', {
                   rules: [{ required: true, message: 'Please input your username!' }],
                 })(
                   <Input
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Username"
+                    placeholder="username"
                   />,
                 )}
             </Form.Item>
             
-            <Form.Item label="Password" >
+            <Form.Item label="密码" >
               {getFieldDecorator('password', {
-                rules: [{ required: true, message: 'Please input your Password!' }],
+                rules: [{ required: true, message: 'Please input your password!' }],
               })(
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
-                  placeholder="Password"
+                  placeholder="password"
                 />,
               )}
             </Form.Item>
-          
+
+            <Form.Item label="验证码" >
+              {getFieldDecorator('code', {
+                rules: [{ required: true, message: 'Please input your Code!' }],
+              })(
+                <Input placeholder="Code" className={styles.code}/>
+              )}
+              <img src={ this.state.img } alt="" className={styles.oImg}  onClick={()=>{this.getCaptchaImage()}}/>
+            </Form.Item>
             <Row>
               <Col span={7}></Col>
               <Col span={12}>

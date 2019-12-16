@@ -39,9 +39,8 @@ export default {
   ],
   proxy: {
     "/api": {
-      "target": 'http://1.1.1.1:8001',
-      "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
+      "target": 'http://10.17.3.116:8080',
+      "pathRewrite": {'^/api' : ''}
     }
   }
 }

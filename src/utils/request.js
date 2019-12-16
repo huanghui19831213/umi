@@ -75,15 +75,26 @@ request.interceptors.request.use(async (url, options) => {
   }
 
 })
-
+console.log(request.getResponse)
 // response拦截器, 处理response
-request.interceptors.response.use((response, options) => {
-  let token = response.headers.get("x-auth-token");
-  if (token) {
-    localStorage.setItem("x-auth-token", token);
+// request.interceptors.response.use((response, options) => {
+//   let token = response.headers.get("x-auth-token");
+//   if (token) {
+//     localStorage.setItem("x-auth-token", token);
+//   }
+//   console.log(response.code)
+//   return response;
+// });
+
+request.interceptors.response.use(async(response) => {
+  const data = await response.clone().json();
+  if(data.code===500){
+    notification.error({
+      message: data.msg
+    });
   }
   return response;
-});
+})
 
 
 export default request;
