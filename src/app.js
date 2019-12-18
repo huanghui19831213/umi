@@ -8,7 +8,7 @@ export const dva = {
     
     extraEnhancers: [
       storageEnhancer({
-        whitelist: ['login']
+        whitelist: ['token']
       })
     ]
   },

@@ -5,11 +5,10 @@ import OImg from '@/assets/image/tree.png';
 import { Component } from 'react';
 import { connect } from 'dva';
 import request from '@/utils/request';
+import router from 'umi/router'
 
-
-@connect(({login,loading}) => ({
-  login:login,
-  submitting: loading.effects['login/login'],
+@connect(({token,loading}) => ({
+  token:token
 }))
 class Login extends Component {
   constructor(props) {
@@ -41,20 +40,20 @@ class Login extends Component {
         console.log(arr)
         request('/api/login', {
           method: 'POST',
+          requestType:'form',
           data: {...arr,uuid:this.state.uuid}
         }).then((e)=>{
-          if(e.code===200){
-
+          if(e.code===500){
+            this.getCaptchaImage()
+          }else if(e.code===200){
+              this.props.dispatch({
+                  type: 'token/setToken',
+                  data: e.token
+              })
+              router.push('/')
           }
         })
-        // this.setState({
-        //   username:values.username,
-        //   password:values.password
-        // })
-      //   this.props.dispatch({
-      //     type: 'login/login',
-      //     data: arr
-      //  })
+      
       }
     });
   };
@@ -123,7 +122,7 @@ const LoginForm = Form.create({ name: 'loginForm' })(Login);
 
 const mapStateToProps =(state) => {
   return {
-    token:state.login.token
+    token:state.token.data
   }
 }
 export default connect(mapStateToProps)(LoginForm)

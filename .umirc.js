@@ -7,7 +7,8 @@ export default {
       path: '/',
       component: '../layouts/index',
       routes: [
-        { path: '/', component: '../pages/users/list' },
+        // ,Routes: ['src/components/Authorized'],
+        { path: '/', component: '../pages/users/list'},
         { path: '/404', component: '../pages/404' },
         { path: '/list', component: '../pages/users/list' },
         { path: '/index', component: '../pages/users/index' },

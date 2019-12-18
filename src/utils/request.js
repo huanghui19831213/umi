@@ -1,7 +1,10 @@
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-
-
+const queryString = require('query-string');
+// let Xtoken='';
+// if(localStorage['persist:dav']){
+//   Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
+// }
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -46,33 +49,25 @@ const request = extend({
 
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use(async (url, options) => {
-
-  let c_token = localStorage.getItem("x-auth-token");
-  if (c_token) {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'x-auth-token': c_token
-    };
+  let type = '';
+  if(options.requestType==='form'){
+    type='application/x-www-form-urlencoded;charset=UTF-8';
+    options.body = queryString.stringify(options.data);
+  }else{
+    type='application/json;charset=UTF-8'
+  }
+  const headers = {
+    'Content-Type': type,
+    'Accept': 'application/json;charset=UTF-8',
+    // 'Authorization':'Bearer ' + Xtoken
+  };
     return (
       {
         url: url,
         options: { ...options, headers: headers },
       }
     );
-  } else {
-    // const headers = {
-    //   'Content-Type': 'application/json',
-    //   'Accept': 'application/json',
-    //   'x-auth-token': c_token
-    // };
-    return (
-      {
-        url: url,
-        options: { ...options },
-      }
-    );
-  }
+  
 
 })
 console.log(request.getResponse)
