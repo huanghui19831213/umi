@@ -1,10 +1,11 @@
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import router from 'umi/router';
 const queryString = require('query-string');
-// let Xtoken='';
-// if(localStorage['persist:dav']){
-//   Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
-// }
+let Xtoken='';
+if(localStorage['persist:dav']){
+  Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
+}
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -59,7 +60,7 @@ request.interceptors.request.use(async (url, options) => {
   const headers = {
     'Content-Type': type,
     'Accept': 'application/json;charset=UTF-8',
-    // 'Authorization':'Bearer ' + Xtoken
+    'Authorization':Xtoken? 'Bearer ' + Xtoken :''
   };
     return (
       {
@@ -70,7 +71,6 @@ request.interceptors.request.use(async (url, options) => {
   
 
 })
-console.log(request.getResponse)
 // response拦截器, 处理response
 // request.interceptors.response.use((response, options) => {
 //   let token = response.headers.get("x-auth-token");
@@ -87,6 +87,13 @@ request.interceptors.response.use(async(response) => {
     notification.error({
       message: data.msg
     });
+  }else if(data.code===401){
+    notification.error({
+      message: data.msg
+    });
+    
+    localStorage.clear();
+    router.push('/login')
   }
   return response;
 })

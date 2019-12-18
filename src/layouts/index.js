@@ -22,8 +22,7 @@ class Layout extends Component {
     });
   }
   render() {
-    const { children, location, token } = this.props;
-    console.log(token)
+    const { children, location } = this.props;
     if(location.pathname!=='/login'){
         return (
           <div className={styles.normal}>

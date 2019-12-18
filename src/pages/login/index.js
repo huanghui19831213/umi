@@ -92,12 +92,14 @@ class Login extends Component {
             </Form.Item>
 
             <Form.Item label="验证码" >
+              <div className={styles.flex}>
               {getFieldDecorator('code', {
                 rules: [{ required: true, message: 'Please input your Code!' }],
               })(
                 <Input placeholder="Code" className={styles.code}/>
               )}
               <img src={ this.state.img } alt="" className={styles.oImg}  onClick={()=>{this.getCaptchaImage()}}/>
+              </div>
             </Form.Item>
             <Row>
               <Col span={7}></Col>
