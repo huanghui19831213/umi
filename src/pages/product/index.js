@@ -2,7 +2,7 @@
 export default () => {
   return (
     <div>
-      <div>users</div>
+      <div>product</div>
     </div>
   );
 };

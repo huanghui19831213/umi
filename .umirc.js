@@ -8,10 +8,10 @@ export default {
       component: '../layouts/index',
       routes: [
         // ,Routes: ['src/components/Authorized'],
-        { path: '/', component: '../pages/users/list'},
+        { path: '/', component: '../pages/product/index',title:'产品列表' },
+        { path: '/users', component: '../pages/users/index' ,title:'添加产品'},
         { path: '/404', component: '../pages/404' },
-        { path: '/list', component: '../pages/users/list' },
-        { path: '/index', component: '../pages/users/index' },
+        // { path: '/index', component: '../pages/users/index' },
         { path: '/login', component: '../pages/login/index' },
       ]
     }
@@ -23,7 +23,15 @@ export default {
       dva: {
         immer: true
       },
-      dynamicImport: false,
+
+      // antd: true,
+      // polyfills: ['ie9'],
+      // locale: {},
+      // library: 'react',
+      // dynamicImport: {
+      //   webpackChunkName: true,
+      //   // loadingComponent: './components/Loading.js',
+      // },
       title: 'abc',
       dll: false,
       

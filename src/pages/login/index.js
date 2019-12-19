@@ -8,7 +8,8 @@ import request from '@/utils/request';
 import router from 'umi/router'
 
 @connect(({token,loading}) => ({
-  token:token
+  token:token,
+  loading
 }))
 class Login extends Component {
   constructor(props) {

@@ -6,7 +6,6 @@ import { message } from 'antd';
 class AuthRouter extends Component {
     render() {
         const { component: Component, token } = this.props
-        console.log(token)
         let isLogged = false
         if (!isLogged) {
           message.warning('您需要先登陆');
