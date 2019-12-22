@@ -1,0 +1,36 @@
+.productform{
+    :global{
+        .ant-col.ant-form-item-control-wrapper:not(.noMargin){
+            margin-top:-32px;
+            padding-left:100px;
+
+        }
+    }
+    .flex{
+        display:flex;
+        align-items:center;
+        >*{flex:1}
+        >*:not(:nth-child(1)){
+            padding-left:20px;
+        }
+        
+        :global{
+            .ant-col.ant-form-item-label{
+                position: relative;
+                top:8px;
+    
+            }
+        }
+    }
+    :global{
+        .bf-container{
+            border:1px solid #c4c4c4;
+        }
+    }
+    .mt62{
+        margin-top:62px;
+    }
+    .ml20{
+        margin-left:20px;
+    }
+}

@@ -10,6 +10,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
     "antd": "^3.26.0",
+    "braft-editor": "^2.3.8",
     "dva": "^2.6.0-beta.6",
     "dva-logger": "^1.0.0",
     "dva-model-persist": "^1.0.0",

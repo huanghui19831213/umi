@@ -14,7 +14,7 @@ class Layout extends Component {
   }
   signout(){
     localStorage.clear();
-    router.push('/login')
+    router.push('/login/')
   };
   setMenu(e){
    return e.map((item) => {
@@ -33,10 +33,12 @@ class Layout extends Component {
   render() {
     const { children, location } = this.props;
     const path = location.pathname;
-    if(location.pathname!=='/login'){
+    console.log(path)
+    if(location.pathname!=='/login/'){
         return (
           <div className={styles.normal}>
             <div className={styles.topMenu} >
+              <span className={styles.logo}>Logo</span>
               <Menu 
                 selectedKeys={[path]}
                 mode="horizontal"

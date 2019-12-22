@@ -4,7 +4,11 @@
   overflow: hidden;
   height: 100%;
 }
-
+.logo{
+  font-weight:bolder;
+  color:#F70404;
+  font-size:24px;
+}
 .topMenu {
   position:fixed;
   top:0px;
@@ -12,7 +16,6 @@
   width:100%;
   display:flex;
   align-items: center;
-  justify-content: space-between;
   border-bottom:1px solid #e8e8e8;
   padding-left:20px;
   padding-right:20px;
@@ -23,7 +26,8 @@
 }
 :global {
   .sider-menu-container.ant-menu-horizontal{
-    border:0px !important
+    border:0px !important;
+    flex:1;
   }
 }
 .allContent{
