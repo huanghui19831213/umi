@@ -1,13 +1,15 @@
 import styles from './index.scss';
 import { Component } from 'react';
-import BraftEditor from 'braft-editor'
-import 'braft-editor/dist/index.css'
+import BraftEditor from 'braft-editor';
+import 'braft-editor/dist/index.css';
+import request from '@/utils/request';
 import {
   Form,
   Input,
   Icon,
   Button,
-  Upload
+  Upload,
+  message 
 } from 'antd';
 
 const { TextArea } = Input;
@@ -17,24 +19,29 @@ class Product extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, value) => {
       if (!err) {
-        console.log(value)
+        let data = {...value,'detail':value.detail.toHTML()};
+        request('/bus/product', {
+          method: 'POST',
+          requestType:'form',
+          data: data
+        }).then((e)=>{
+          
+        })
+        
       }
     });
   };
-  state = {
-    editorState: null
-  }
-  submitContent = async () => {
-    // 在编辑器获得焦点时按下ctrl+s会执行此方法
-    // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
-    const htmlContent = this.state.editorState.toHTML()
-    // const result = await saveEditorContent(htmlContent)
-    console.log(htmlContent)
-  }
-
-  handleEditorChange = (editorState) => {
-    this.setState({ editorState })
-  }
+  beforeUpload(file) {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('请上传JPG或PNG格式的图片');
+    }
+    const isLt4M = file.size / 1024 / 1024 < 4;
+    if (!isLt4M) {
+      message.error('上传的图片不能大于4M');
+    }
+    return isJpgOrPng && isLt4M;
+  };
   render(){
     const { getFieldDecorator } = this.props.form;
 
@@ -103,6 +110,7 @@ class Product extends Component {
               name="avatar"
               listType="picture-card"
               className="avatar-uploader"
+              beforeUpload={this.beforeUpload}
             >
               <div>
                 <Icon type="plus" />
@@ -119,10 +127,7 @@ class Product extends Component {
                     message: '请输入详细信息!',
                   },
                 ],
-              })(<BraftEditor 
-                value={this.state.editorState}
-                onChange={()=>this.handleEditorChange()}
-                onSave={this.submitContent}/>)}
+              })(<BraftEditor />)}
               
           </Form.Item>
           <div className={styles.mt62}>
