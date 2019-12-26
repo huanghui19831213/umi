@@ -1,6 +1,6 @@
 import styles from './index.scss';
 import { Form, Icon, Input, Button, Row, Col  } from 'antd';
-import OImg from '@/assets/image/tree.png';
+// import OImg from '@/assets/image/tree.png';
 
 import { Component } from 'react';
 import { connect } from 'dva';
@@ -65,7 +65,7 @@ class Login extends Component {
     const {getFieldDecorator} = this.props.form;
     return(
       <div className={styles.contentBg}>
-        <img src={OImg} alt="" className={styles.bg} />
+        {/* <img src={OImg} alt="" className={styles.bg} /> */}
         <div>
           <h6>用户登录</h6>
           <Form  labelCol={{ span: 7 }} wrapperCol={{ span: 12 }}  onSubmit={this.handleSubmit} className="login-form">

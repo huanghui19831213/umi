@@ -16,6 +16,7 @@ export default {
       ]
     }
   ],
+  
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {
@@ -24,14 +25,14 @@ export default {
         immer: true
       },
 
-      // antd: true,
+      antd: true,
       // polyfills: ['ie9'],
-      // locale: {},
-      // library: 'react',
-      // dynamicImport: {
-      //   webpackChunkName: true,
-      //   // loadingComponent: './components/Loading.js',
-      // },
+      locale: {},
+      library: 'react',
+      dynamicImport: {
+        webpackChunkName: true,
+        // loadingComponent: 'src/components/loading',
+      },
       title: 'abc',
       dll: false,
       
@@ -48,7 +49,7 @@ export default {
   ],
   proxy: {
     "/api": {
-      "target": 'http://10.17.3.116:8080',
+      "target": 'http://120.27.27.183:8080',
       "pathRewrite": {'^/api' : ''}
     }
   }

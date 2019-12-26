@@ -5,11 +5,7 @@ import 'braft-editor/dist/index.css'
 import {
   Form,
   Input,
-  Tooltip,
   Icon,
-  Row,
-  Col,
-  Checkbox,
   Button,
   Upload
 } from 'antd';
@@ -17,6 +13,28 @@ import {
 const { TextArea } = Input;
 
 class Product extends Component {
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, value) => {
+      if (!err) {
+        console.log(value)
+      }
+    });
+  };
+  state = {
+    editorState: null
+  }
+  submitContent = async () => {
+    // 在编辑器获得焦点时按下ctrl+s会执行此方法
+    // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
+    const htmlContent = this.state.editorState.toHTML()
+    // const result = await saveEditorContent(htmlContent)
+    console.log(htmlContent)
+  }
+
+  handleEditorChange = (editorState) => {
+    this.setState({ editorState })
+  }
   render(){
     const { getFieldDecorator } = this.props.form;
 
@@ -24,39 +42,61 @@ class Product extends Component {
       <div className={styles.productform}>
         <Form  onSubmit={this.handleSubmit}>
           <Form.Item label="商品名称">
-            {getFieldDecorator('email', {
+            {getFieldDecorator('productName', {
               rules: [
                 {
-                  type: 'email',
-                  message: 'The input is not valid E-mail!',
-                },
-                {
                   required: true,
-                  message: 'Please input your E-mail!',
+                  message: '请输入商品名称!',
                 },
               ],
             })(<Input />)}
           </Form.Item>
           <div className={styles.flex}>
             <Form.Item label="商品型号" >
-              <Input />
+            {getFieldDecorator('productType', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入商品型号!',
+                  },
+                ],
+              })(<Input />)}
             </Form.Item>
             
-            <Form.Item label="库存商品" >
-              <Input onBlur={this.handleConfirmBlur} />
+            <Form.Item label="商品库存" >
+            {getFieldDecorator('amount', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入商品库存!',
+                  },
+                ],
+              })(<Input />)}
             </Form.Item>
           </div>
           <div className={styles.flex}>
-            <Form.Item label="市场价格" >
-              <Input />
-            </Form.Item>
-            
             <Form.Item label="商品价格" >
-              <Input onBlur={this.handleConfirmBlur} />
+              {getFieldDecorator('price', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入商品价格!',
+                  },
+                ],
+              })(<Input />)}
             </Form.Item>
+
+            <Form.Item></Form.Item>
           </div>
-          <Form.Item label="商品介绍" >
-            <TextArea rows={6} onBlur={this.handleConfirmBlur} />
+          <Form.Item label="商品描述" >
+            {getFieldDecorator('description', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入商品描述!',
+                  },
+                ],
+              })(<TextArea rows={6} />)}
           </Form.Item>
           <Form.Item label="商品图片" >
             <Upload
@@ -72,7 +112,18 @@ class Product extends Component {
           </Form.Item>
           
           <Form.Item label="详细信息" >
-              <BraftEditor/>
+             {getFieldDecorator('detail', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入详细信息!',
+                  },
+                ],
+              })(<BraftEditor 
+                value={this.state.editorState}
+                onChange={()=>this.handleEditorChange()}
+                onSave={this.submitContent}/>)}
+              
           </Form.Item>
           <div className={styles.mt62}>
             <Form.Item>

@@ -16,6 +16,12 @@ class Layout extends Component {
     localStorage.clear();
     router.push('/login/')
   };
+  componentDidMount(){
+    console.log(this.props.token)
+    if(!this.props.token){
+       router.push('/login/')
+    }
+  };
   setMenu(e){
    return e.map((item) => {
       if(!item.children&&item.title){

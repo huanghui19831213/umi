@@ -93,7 +93,7 @@ request.interceptors.response.use(async(response) => {
     });
     
     localStorage.clear();
-    router.push('/login')
+    router.push('/login/')
   }
   return response;
 })
