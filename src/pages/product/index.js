@@ -15,6 +15,13 @@ import {
 const { TextArea } = Input;
 
 class Product extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      files:[]
+    };
+  };
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, value) => {
@@ -35,12 +42,18 @@ class Product extends Component {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
       message.error('请上传JPG或PNG格式的图片');
+      return isJpgOrPng ;
     }
     const isLt4M = file.size / 1024 / 1024 < 4;
     if (!isLt4M) {
       message.error('上传的图片不能大于4M');
+      return isLt4M;
     }
-    return isJpgOrPng && isLt4M;
+  };
+  handleChange(e){
+    if(e.file.originFileObj){
+      this.setState({'files':e.fileList})
+    }
   };
   render(){
     const { getFieldDecorator } = this.props.form;
@@ -106,17 +119,27 @@ class Product extends Component {
               })(<TextArea rows={6} />)}
           </Form.Item>
           <Form.Item label="商品图片" >
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader"
-              beforeUpload={this.beforeUpload}
-            >
-              <div>
-                <Icon type="plus" />
-              </div>
-              {/* {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton} */}
-            </Upload>
+            
+          {getFieldDecorator('files', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请上传图片!',
+                  },
+                ],
+              })(
+                <Upload
+                  name="avatar"
+                  listType="picture-card"
+                  fileList={this.state.files}
+                  className="avatar-uploader"
+                  beforeUpload={this.beforeUpload}
+                  onChange={(e)=>this.handleChange(e)}
+                >
+                  <div>
+                    <Icon type="plus" />
+                  </div>
+                </Upload>)}
           </Form.Item>
           
           <Form.Item label="详细信息" >
