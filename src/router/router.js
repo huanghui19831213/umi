@@ -4,10 +4,8 @@ const router =[
       component: '../layouts/index',
       routes: [
         // ,Routes: ['src/components/Authorized'],
-        { path: '/', component: '../pages/product/index',title:'产品列表' },
-        { path: '/404', component: '../pages/users/index' ,title:'添加产品'},
-        // { path: '/index', component: '../pages/users/index' },
-        { path: '/login', component: '../pages/login/index' },
+        { path: '/', component: '../pages/product/list',title:'产品列表' },
+        { path: '/add', component: '../pages/product/index' ,title:'添加产品'},
       ]
     }
   ]

@@ -8,11 +8,10 @@ export default {
       component: '../layouts/index',
       routes: [
         // ,Routes: ['src/components/Authorized'],
-        { path: '/', component: '../pages/product/index',title:'产品列表' },
-        { path: '/users', component: '../pages/users/index' ,title:'添加产品'},
-        { path: '/404', component: '../pages/404' },
-        // { path: '/index', component: '../pages/users/index' },
+        { path: '/add', component: '../pages/product/index' },
+        { path: '/', component: '../pages/product/list' },
         { path: '/login', component: '../pages/login/index' },
+        { path: '/editor/:id/:editor', component: '../pages/product/index'},
       ]
     }
   ],

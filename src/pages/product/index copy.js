@@ -3,7 +3,6 @@ import { Component } from 'react';
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
 import request from '@/utils/request';
-import router from 'umi/router'
 import {
   Form,
   Input,
@@ -14,56 +13,25 @@ import {
 } from 'antd';
 
 const { TextArea } = Input;
-const editorProps = {
-  height: 350,
-  contentFormat: 'html',
-  // initialContent: line ? line.introduction : '',
-  // onChange: this.handleChangeEditor,
-  // onRawChange: this.handleRawChange,
-  media: {
-    allowPasteImage: true, // 是否允许直接粘贴剪贴板图片（例如QQ截图等）到编辑器
-    image: true, // 开启图片插入功能
-    video: true, // 开启视频插入功能
-    audio: true, // 开启音频插入功能
-    validateFn: null, // 指定本地校验函数，说明见下文
-    // uploadFn: uploadFn, // 指定上传函数，说明见下文
-    removeConfirmFn: null, // 指定删除前的确认函数，说明见下文
-    onRemove: null, // 指定媒体库文件被删除时的回调，参数为被删除的媒体文件列表(数组)
-    onChange: null, // 指定媒体库文件列表发生变化时的回调，参数为媒体库文件列表(数组)
-    onInsert: null, // 指定从媒体库插入文件到编辑器时的回调，参数为被插入的媒体文件列表(数组)
-  },
-}
+
 class Product extends Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      files:[],
-      data:{},
-      status:'see',
-      methodType:'POST'
+      files:[]
     };
   };
   componentDidMount(){
     if(this.props.match.params.id){
       this.getInfo()
     }
-    if(this.props.match.params.id&&Number(this.props.match.params.editor)===1){
-      //修改
-      console.log(1)
-      this.setState({status:'editor',methodType:'PUT'})
-    }else if(this.props.match.params.id&&Number(this.props.match.params.editor)!==1){
-      //查看
-      this.setState({status:'see'})
-    }else{
-      //新增
-      this.setState({status:'add',methodType:'POST'})
-    }
   };
   getInfo(){
     request('/api/bus/product/'+this.props.match.params.id).then((e)=>{
       if(e.code===200){
-        this.setState({...e.data,detail:BraftEditor.createEditorState(e.data.detail)},()=>{
+        this.setState({...e.data},()=>{
+          console.log(this.state)
         })
       }
     })
@@ -72,14 +40,13 @@ class Product extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, value) => {
       if (!err) {
-        let data = {...value,detail:value.detail.toHTML(),files:this.state.files,productId:this.props.match.params.id||''};
-        
+        let data = {...value,detail:value.detail.toHTML(),files:this.state.files};
         request('/api/bus/product', {
-          method: this.state.methodType,
+          method: 'POST',
           requestType:'form',
           data: data
         }).then((e)=>{
-          router.push('/')
+          
         })
         
       }
@@ -104,20 +71,14 @@ class Product extends Component {
       })
     }
   };
-  
-  handleReset = () => {
-    console.log(this.props.form)
-    this.props.form.resetFields();
-  };
   render(){
     const { getFieldDecorator } = this.props.form;
-    let state = this.state;
+
     return (
       <div className={styles.productform}>
         <Form  onSubmit={this.handleSubmit}>
           <Form.Item label="商品名称">
             {getFieldDecorator('productName', {
-              initialValue:state.productName||'',
               rules: [
                 {
                   required: true,
@@ -129,7 +90,6 @@ class Product extends Component {
           <div className={styles.flex}>
             <Form.Item label="商品型号" >
             {getFieldDecorator('productType', {
-                initialValue:state.productType||'',
                 rules: [
                   {
                     required: true,
@@ -141,7 +101,6 @@ class Product extends Component {
             
             <Form.Item label="商品库存" >
             {getFieldDecorator('amount', {
-                initialValue:state.amount||'',
                 rules: [
                   {
                     required: true,
@@ -154,7 +113,6 @@ class Product extends Component {
           <div className={styles.flex}>
             <Form.Item label="商品价格" >
               {getFieldDecorator('price', {
-                initialValue:state.price||'',
                 rules: [
                   {
                     required: true,
@@ -168,7 +126,6 @@ class Product extends Component {
           </div>
           <Form.Item label="商品描述" >
             {getFieldDecorator('description', {
-                initialValue:state.description||'',
                 rules: [
                   {
                     required: true,
@@ -194,14 +151,13 @@ class Product extends Component {
           
           <Form.Item label="详细信息" >
              {getFieldDecorator('detail', {
-                initialValue:state.detail,
                 rules: [
                   {
                     required: true,
                     message: '请输入详细信息!',
                   },
                 ],
-              })(<BraftEditor  {...editorProps}/>)}
+              })(<BraftEditor />)}
               
           </Form.Item>
           <div className={styles.mt62}>
@@ -209,7 +165,7 @@ class Product extends Component {
               <Button type="primary" htmlType="submit">
                 提交
               </Button>
-              <Button className={styles.ml20} onClick={this.handleReset} >
+              <Button className={styles.ml20} >
                 重置
               </Button>
             </Form.Item>

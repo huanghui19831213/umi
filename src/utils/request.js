@@ -3,9 +3,6 @@ import { notification } from 'antd';
 import router from 'umi/router';
 const queryString = require('query-string');
 let Xtoken='';
-if(localStorage['persist:dav']){
-  Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
-}
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -51,6 +48,10 @@ const request = extend({
 // request拦截器, 改变url 或 options.
 request.interceptors.request.use(async (url, options) => {
   let type = '';
+  
+  // if(localStorage['persist:dav']){
+  //   Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
+  // }
   if(options.requestType==='form'){
     type='application/x-www-form-urlencoded;charset=UTF-8';
     options.body = queryString.stringify(options.data);
