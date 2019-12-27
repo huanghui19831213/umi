@@ -22,12 +22,14 @@ class Product extends Component {
       files:[]
     };
   };
+  componentDidMount(){
+  };
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, value) => {
       if (!err) {
-        let data = {...value,'detail':value.detail.toHTML()};
-        request('/bus/product', {
+        let data = {...value,detail:value.detail.toHTML(),files:this.state.files};
+        request('/api/bus/product', {
           method: 'POST',
           requestType:'form',
           data: data
@@ -52,7 +54,9 @@ class Product extends Component {
   };
   handleChange(e){
     if(e.file.originFileObj){
-      this.setState({'files':e.fileList})
+      this.setState({'files':e.fileList},()=>{
+        console.log(this.state.files)
+      })
     }
   };
   render(){
@@ -119,15 +123,6 @@ class Product extends Component {
               })(<TextArea rows={6} />)}
           </Form.Item>
           <Form.Item label="商品图片" >
-            
-          {getFieldDecorator('files', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请上传图片!',
-                  },
-                ],
-              })(
                 <Upload
                   name="avatar"
                   listType="picture-card"
@@ -139,7 +134,7 @@ class Product extends Component {
                   <div>
                     <Icon type="plus" />
                   </div>
-                </Upload>)}
+                </Upload>
           </Form.Item>
           
           <Form.Item label="详细信息" >

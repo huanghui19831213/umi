@@ -38,7 +38,6 @@ class Login extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, arr) => {
       if (!err) {
-        console.log(arr)
         request('/api/login', {
           method: 'POST',
           requestType:'form',
