@@ -49,8 +49,11 @@ export default {
   proxy: {
     "/api": {
       // http://10.17.3.116
-      "target": 'http://120.27.27.183:8080',
+      "target": 'http://10.17.3.116:8080',
       "pathRewrite": {'^/api' : ''}
     }
+  },
+  define: {
+    "process.env.api": 'http://10.17.3.116:8080'
   }
 }

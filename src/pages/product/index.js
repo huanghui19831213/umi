@@ -4,6 +4,7 @@ import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
 import request from '@/utils/request';
 import router from 'umi/router'
+import { connect } from 'dva';
 import {
   Form,
   Input,
@@ -41,7 +42,8 @@ class Product extends Component {
       files:[],
       data:{},
       status:'see',
-      methodType:'POST'
+      methodType:'POST',
+
     };
   };
   componentDidMount(){
@@ -50,7 +52,6 @@ class Product extends Component {
     }
     if(this.props.match.params.id&&Number(this.props.match.params.editor)===1){
       //修改
-      console.log(1)
       this.setState({status:'editor',methodType:'PUT'})
     }else if(this.props.match.params.id&&Number(this.props.match.params.editor)!==1){
       //查看
@@ -63,7 +64,7 @@ class Product extends Component {
   getInfo(){
     request('/api/bus/product/'+this.props.match.params.id).then((e)=>{
       if(e.code===200){
-        this.setState({...e.data,detail:BraftEditor.createEditorState(e.data.detail)},()=>{
+        this.setState({...e.data,detail:BraftEditor.createEditorState(e.data.detail),files:e.data.productImg?[{url:e.data.productImg,uid:e.data.productImg}]:[]},()=>{
         })
       }
     })
@@ -71,9 +72,13 @@ class Product extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, value) => {
+      // 批量上传
       if (!err) {
-        let data = {...value,detail:value.detail.toHTML(),files:this.state.files,productId:this.props.match.params.id||''};
-        
+        let files='';
+        this.state.files.map((e)=>{
+          files=files+','+e.url
+        })
+        let data = {...value,detail:value.detail.toHTML(),files:files.substring(1,files.length),productId:this.props.match.params.id||''};
         request('/api/bus/product', {
           method: this.state.methodType,
           requestType:'form',
@@ -97,13 +102,6 @@ class Product extends Component {
       return isLt4M;
     }
   };
-  handleChange(e){
-    if(e.file.originFileObj){
-      this.setState({'files':e.fileList},()=>{
-        console.log(this.state.files)
-      })
-    }
-  };
   
   handleReset = () => {
     console.log(this.props.form)
@@ -112,6 +110,31 @@ class Product extends Component {
   render(){
     const { getFieldDecorator } = this.props.form;
     let state = this.state;
+    const uploadParms = {
+      multiple:true,
+      customRequest: info => {
+        const formData = new FormData();
+        formData.append('file', info.file);
+        request('/api/common/upload',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          data: formData
+        }).then(e=>{  
+            let data={
+              url:e.url,
+              uid: e.fileName
+            }
+            this.setState({
+              files:[...this.state.files,data]
+            })
+          })
+      },
+      listType:"picture-card",
+      beforeUpload:this.beforeUpload
+    };
+    
     return (
       <div className={styles.productform}>
         <Form  onSubmit={this.handleSubmit}>
@@ -178,17 +201,13 @@ class Product extends Component {
               })(<TextArea rows={6} />)}
           </Form.Item>
           <Form.Item label="商品图片" >
-                <Upload
-                  name="avatar"
-                  listType="picture-card"
-                  fileList={this.state.files}
-                  className="avatar-uploader"
-                  beforeUpload={this.beforeUpload}
-                  onChange={(e)=>this.handleChange(e)}
-                >
-                  <div>
+                <Upload {...uploadParms} 
+                  fileList={state.files}>
+                  {state.files.length >= 1 ? null : 
+                  (<div>
                     <Icon type="plus" />
-                  </div>
+                  </div>)
+                  }
                 </Upload>
           </Form.Item>
           
@@ -219,5 +238,11 @@ class Product extends Component {
     );
   }
 }
+
+const mapStateToProps =(state) => {
+  return {
+    token:state.token.data
+  }
+}
 const ProductForm = Form.create({ name: 'product' })(Product);
-export default ProductForm
+export default connect(mapStateToProps)(ProductForm)

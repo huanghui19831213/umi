@@ -14,6 +14,7 @@ class Layout extends Component {
   }
   signout(){
     localStorage.clear();
+    
     router.push('/login/')
   };
   componentDidMount(){
@@ -44,7 +45,7 @@ class Layout extends Component {
         return (
           <div className={styles.normal}>
             <div className={styles.topMenu} >
-              <span className={styles.logo}>Logo</span>
+              {/* <span className={styles.logo}>Logo</span> */}
               <Menu 
                 selectedKeys={[path]}
                 mode="horizontal"
@@ -60,6 +61,7 @@ class Layout extends Component {
         )
       
     }
+    
     return (
       <div className="allClient">{children}</div>
     )

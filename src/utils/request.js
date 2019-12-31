@@ -49,20 +49,31 @@ const request = extend({
 request.interceptors.request.use(async (url, options) => {
   let type = '';
   
-  // if(localStorage['persist:dav']){
-  //   Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
-  // }
+  if(localStorage['persist:dav']){
+    Xtoken=JSON.parse(JSON.parse(localStorage['persist:dav']).token).data
+  }else{
+    Xtoken=''
+  }
   if(options.requestType==='form'){
     type='application/x-www-form-urlencoded;charset=UTF-8';
     options.body = queryString.stringify(options.data);
   }else{
     type='application/json;charset=UTF-8'
   }
-  const headers = {
-    'Content-Type': type,
-    'Accept': 'application/json;charset=UTF-8',
-    'Authorization':Xtoken? 'Bearer ' + Xtoken :''
-  };
+
+  let  headers = {}
+  if(options.headers['Content-Type']){
+    headers = {
+      'Accept': 'application/json;charset=UTF-8',
+      'Authorization':Xtoken? 'Bearer ' + Xtoken :''
+    };
+  }else{
+    headers={
+      'Content-Type': type,
+      'Accept': 'application/json;charset=UTF-8',
+      'Authorization':Xtoken? 'Bearer ' + Xtoken :''
+    };
+  }
     return (
       {
         url: url,
@@ -72,15 +83,6 @@ request.interceptors.request.use(async (url, options) => {
   
 
 })
-// response拦截器, 处理response
-// request.interceptors.response.use((response, options) => {
-//   let token = response.headers.get("x-auth-token");
-//   if (token) {
-//     localStorage.setItem("x-auth-token", token);
-//   }
-//   console.log(response.code)
-//   return response;
-// });
 
 request.interceptors.response.use(async(response) => {
   const data = await response.clone().json();
